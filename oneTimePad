@@ -1,0 +1,53 @@
+import java.util.Scanner;
+
+public class OneTimePad {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the plaintext: ");
+        String plaintext = sc.nextLine();
+        System.out.println("Enter the key: ");
+        String key = sc.nextLine();
+
+        String ciphertext = encrypt(plaintext, key);
+        System.out.println("Ciphertext: " + ciphertext);
+
+        String decryptedText = decrypt(ciphertext, key);
+        System.out.println("Decrypted text: " + decryptedText);
+    }
+
+    public static String encrypt(String plaintext, String key) {
+        String ciphertext = "";
+        plaintext = plaintext.toUpperCase();
+        key = key.toUpperCase();
+
+        for (int i = 0; i < plaintext.length(); i++) {
+            char c = plaintext.charAt(i);
+            if (c < 'A' || c > 'Z') {
+                continue;
+            }
+            ciphertext += (char) ((c + key.charAt(i) - 2 * 'A') % 26 + 'A');
+        }
+        return ciphertext;
+    }
+
+    public static String decrypt(String ciphertext, String key) {
+        String plaintext = "";
+        ciphertext = ciphertext.toUpperCase();
+        key = key.toUpperCase();
+
+        for (int i = 0; i < ciphertext.length(); i++) {
+            char c = ciphertext.charAt(i);
+            if (c < 'A' || c > 'Z') {
+                continue;
+            }
+            plaintext += (char) ((c - key.charAt(i) + 26) % 26 + 'A');
+        }
+        return plaintext;
+    }
+}
+output:-
+Enter the plaintext: 
+hello
+Enter the key: 
+axcmp
+Ciphertext: HBNXD Decrypted text: HELLO
