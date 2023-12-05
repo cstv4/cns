@@ -1,0 +1,61 @@
+import java.util.Scanner;
+public class RSAEncryption {
+    public static int modfun(int a, int n, int b) {
+        if (b == 1) {
+            return a % n;
+        } else {
+            return ((a % n) * modfun(a, n, b - 1)) % n;
+        }
+    }
+    public static int gcd(int a, int b) {
+        if (a == 0) {
+            return b;
+        } else if (b == 0) {
+            return a;
+        } else if (a == b) {
+            return a;
+        } else if (a > b) {
+            return gcd(a - b, b);
+        } else {
+            return gcd(a, b - a);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int a, b, n, e, d = 0, phi, m;
+        int em, dm;
+
+        System.out.println("Enter two prime numbers:");
+        a = scanner.nextInt();
+        b = scanner.nextInt();
+        n = a * b;
+        phi = (a-1)*(b-1);
+        System.out.println(phi);
+
+        System.out.print("Enter e value: ");
+        e = scanner.nextInt();
+
+        if (0 < e && e < n && gcd(e, phi) == 1) {
+            for (int i = 2; i < n; i++) {
+                if ((e * i) % phi == 1) {
+                    System.out.println("d value is: " + i);
+                    d = i;
+                    break;
+                }
+            }
+            System.out.printf("KU {%d %d}\n", e, n);
+            System.out.printf("KR {%d %d}\n", d, n);
+
+            System.out.print("Enter message: ");
+            m = scanner.nextInt();
+            em = modfun(m, n, e);
+            dm = modfun(em, n, d);
+
+            System.out.println("Encrypted message: " + em);
+            System.out.println("Decrypted message: " + (dm % n));
+        } else {
+            System.out.println("Invalid e value");
+        }
+    }
+}
