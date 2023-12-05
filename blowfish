@@ -1,0 +1,43 @@
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Scanner;
+
+public class BlowFish {
+    public static void main(String[] args) {
+        try {
+            // Get the KeyGenerator
+            KeyGenerator kgen = KeyGenerator.getInstance("Blowfish");
+            Cipher cipher = Cipher.getInstance("Blowfish");
+
+            // Generate the secret key
+            SecretKey skey = kgen.generateKey();
+            byte[] raw = skey.getEncoded();
+            SecretKeySpec skeySpec = new SecretKeySpec(raw, "Blowfish");
+
+            cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+
+            // Input message from the user via command line
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Input your message: ");
+            String inputText = scanner.nextLine();
+
+            byte[] encrypted = cipher.doFinal(inputText.getBytes());
+
+            // Decrypt the encrypted message
+            cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+            byte[] decrypted = cipher.doFinal(encrypted);
+
+            // Display the encrypted and decrypted messages
+            System.out.println("\nOriginal text: " + inputText +
+                    "\n\nEncrypted text: " + new String(encrypted) +
+                    "\n\nDecrypted text: " + new String(decrypted)
+            );
+
+            scanner.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
