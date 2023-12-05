@@ -1,0 +1,39 @@
+Index.html:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diffie-Hellman Key Exchange</title>
+</head>
+<body>
+  <h1>Diffie-Hellman Key Exchange Example</h1>
+  <button onclick="startKeyExchange()">Start Key Exchange</button>
+  <div id="output"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+Script.js:
+
+const p = 23; 
+const g = 5; 
+let privateA, privateB;
+let publicA, publicB; 
+function startKeyExchange() {
+  privateA = Math.floor(Math.random() * (p - 1)) + 1;
+  publicA = (g ** privateA) % p;
+  privateB = Math.floor(Math.random() * (p - 1)) + 1;
+  publicB = (g ** privateB) % p; 
+  const sharedSecretA = (publicB ** privateA) % p;
+  const sharedSecretB = (publicA ** privateB) % p; 
+  document.getElementById('output').innerHTML = `
+    Private key for party A: ${privateA}<br>
+    Public key for party A: ${publicA}<br>
+    Shared secret for party A: ${sharedSecretA}<br><br>
+    Private key for party B: ${privateB}<br>
+    Public key for party B: ${publicB}<br>
+    Shared secret for party B: ${sharedSecretB}
+  `;
+}
