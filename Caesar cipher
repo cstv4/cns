@@ -1,0 +1,44 @@
+import java.util.*;
+public class CaesarCipher {
+    public static String encrypt(String plaintext, int shift) {
+        StringBuilder encryptedText = new StringBuilder();
+
+        for (char character : plaintext.toCharArray()) {
+            if (Character.isLetter(character)) {
+                char base = Character.isLowerCase(character) ? 'a' : 'A';
+                int offset = character - base;
+                char encryptedChar = (char) ((offset + shift) % 26 + base);
+                encryptedText.append(encryptedChar);
+            } else {
+                encryptedText.append(character);
+            }
+        }
+
+        return encryptedText.toString();
+    }
+
+    public static String decrypt(String ciphertext, int shift) {
+        return encrypt(ciphertext, 26 - shift); // Decryption is just encryption with the inverse shift
+    }
+
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        System.out.println("enter the plain text:");
+        String plaintext = sc.nextLine();
+        int shift = 3;
+
+        String encryptedText = encrypt(plaintext, shift);
+        String decryptedText = decrypt(encryptedText, shift);
+
+        System.out.println("Original Text: " + plaintext);
+        System.out.println("Encrypted Text: " + encryptedText);
+        System.out.println("Decrypted Text: " + decryptedText);
+    }
+}
+
+Output:
+enter the plain text:
+hello
+Original Text: hello
+Encrypted Text: khoor
+Decrypted Text: hello
