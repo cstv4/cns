@@ -1,0 +1,54 @@
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+public class RC4 {
+    public static void main(String[] args) {
+        try {
+            String rc4Key = "RC4SecretKey";
+            String plaintext = "Hello world";
+            byte[] rc4Encrypted = encryptRC4(rc4Key, plaintext);
+            System.out.println("RC4 Encrypted Text: " + bytesToHex(rc4Encrypted));
+            String blowfishKey = generateBlowfishKey();
+            System.out.println("Blowfish Key: " + blowfishKey);
+            byte[] blowfishEncrypted = encryptBlowfish(blowfishKey, plaintext);
+            System.out.println("Blowfish Encrypted Text: " + bytesToHex(blowfishEncrypted));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private static byte[] encryptRC4(String key, String plaintext) throws Exception {
+        Cipher rc4Cipher = Cipher.getInstance("RC4");
+        SecretKeySpec rc4Key = new SecretKeySpec(key.getBytes(), "RC4");
+        rc4Cipher.init(Cipher.ENCRYPT_MODE, rc4Key);
+        return rc4Cipher.doFinal(plaintext.getBytes());
+    }
+    private static String generateBlowfishKey() throws Exception {
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("Blowfish");
+        keyGenerator.init(128);
+        SecretKey secretKey = keyGenerator.generateKey();
+        return bytesToHex(secretKey.getEncoded());
+    }
+    private static byte[] encryptBlowfish(String key, String plaintext) throws Exception {
+        Cipher blowfishCipher = Cipher.getInstance("Blowfish");
+        SecretKeySpec blowfishKey = new SecretKeySpec(hexToBytes(key), "Blowfish");
+        blowfishCipher.init(Cipher.ENCRYPT_MODE, blowfishKey);
+        return blowfishCipher.doFinal(plaintext.getBytes());
+    }
+    private static String bytesToHex(byte[] bytes) {
+        StringBuilder hexStringBuilder = new StringBuilder();
+        for (byte b : bytes) {
+            hexStringBuilder.append(String.format("%02x", b & 0xFF));
+        }
+        return hexStringBuilder.toString();
+    }
+    private static byte[] hexToBytes(String hex) {
+        int len = hex.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
+                    + Character.digit(hex.charAt(i + 1), 16));
+        }
+        return data;
+    }
+}
